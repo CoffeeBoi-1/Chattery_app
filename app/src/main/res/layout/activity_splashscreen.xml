@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Splashscreen"
-    android:background="@drawable/backgroundyellow">
+    android:background="@drawable/backgroundyellow"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
 
     <TextView
         android:layout_width="match_parent"
@@ -16,6 +19,6 @@
         android:text="@string/welcome"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/comfortaa_bold"
-        android:textSize="70sp">
+        android:textSize="65sp">
     </TextView>
 </LinearLayout>

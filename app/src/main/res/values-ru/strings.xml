@@ -2,4 +2,8 @@
 <resources>
     <string name="app_name">Chattery</string>
     <string name="welcome">Привет!</string>
+    <string name="choose_login_method">Выбери метод входа</string>
+    <string name="discord">Дискорд</string>
+    <string name="vk">ВК</string>
+    <string name="telegram">Телеграм</string>
 </resources>

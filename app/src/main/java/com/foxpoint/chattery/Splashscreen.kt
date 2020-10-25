@@ -1,10 +1,15 @@
 package com.foxpoint.chattery
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import java.util.*
+import kotlin.concurrent.schedule
 
 class Splashscreen : AppCompatActivity() {
 
@@ -21,6 +26,12 @@ class Splashscreen : AppCompatActivity() {
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
 
-
+        Timer().schedule(1500){
+            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+            val intent= Intent(this@Splashscreen,Reg_menu::class.java)
+            startActivity(intent)
+            Animatoo.animateFade(this@Splashscreen)
+            finish()
+        }
     }
 }

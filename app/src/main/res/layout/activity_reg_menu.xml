@@ -1,9 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Reg_menu">
+    tools:context=".Reg_menu"
+    android:background="@drawable/backgroundblue"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="@string/choose_login_method"
+        android:gravity="center"
+        android:fontFamily="@font/comfortaa_bold"
+        android:textColor="@color/textBlack"
+        android:id="@+id/choose_login_method_text">
+    </TextView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/discord_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/rounded_btn_style"
+        android:drawableStart="@drawable/ic_discord_logo"
+        android:fontFamily="@font/comfortaa_bold"
+        android:padding="10dp"
+        android:text="@string/discord"
+        android:textSize="20sp">
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:id="@+id/vk_btn"
+        android:background="@drawable/rounded_btn_style"
+        android:text="@string/vk"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:fontFamily="@font/comfortaa_bold"
+        android:drawableStart="@drawable/ic_vk_logo">
+    </Button>
+
+    <Button
+        android:id="@+id/telegram_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/rounded_btn_style"
+        android:drawableStart="@drawable/ic_telegram_logo"
+        android:fontFamily="@font/comfortaa_bold"
+        android:padding="10dp"
+        android:text="@string/telegram"
+        android:textSize="20sp">
+    </Button>
+</LinearLayout>

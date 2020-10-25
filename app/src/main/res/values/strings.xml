@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Chattery</string>
     <string name="welcome">Welcome!</string>
+    <string name="choose_login_method">Choose login method</string>
+    <string name="discord">Discord</string>
+    <string name="vk">VK</string>
+    <string name="telegram">Telegram</string>
 </resources>
