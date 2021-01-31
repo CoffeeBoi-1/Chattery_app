@@ -5,4 +5,9 @@
     <string name="discord">Discord</string>
     <string name="vk">VK</string>
     <string name="telegram">Telegram</string>
+    <string name="enter_your_name">Enter your Name</string>
+    <string name="join_game">Join an existing Game</string>
+    <string name="host_name">Host the Game</string>
+    <string name="get_discord_token_error">Some Error happened. Try again</string>
+    <string name="incorrect_qr_code">QR code is incorrect!</string>
 </resources>

@@ -26,7 +26,37 @@ class Reg_menu : AppCompatActivity() {
         discord_btn.animation=AnimationUtils.loadAnimation(this,R.anim.anim_fade_left_slide)
         vk_btn.animation=AnimationUtils.loadAnimation(this,R.anim.anim_fade_right_slide)
         telegram_btn.animation=AnimationUtils.loadAnimation(this,R.anim.anim_fade_down_slide)
+        //---------------------------------------------------------------------------------------------
 
+        discord_btn.setOnClickListener{
+            DiscordUtils.GetLoginCode(this.applicationContext)
+            finish()
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        val decorView=window.decorView;
+        decorView.systemUiVisibility= (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val attrib = window.attributes
+            attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        val decorView=window.decorView;
+        decorView.systemUiVisibility= (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val attrib = window.attributes
+            attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
     }
 }

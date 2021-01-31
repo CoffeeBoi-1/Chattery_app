@@ -6,4 +6,9 @@
     <string name="discord">Дискорд</string>
     <string name="vk">ВК</string>
     <string name="telegram">Телеграм</string>
+    <string name="enter_your_name">"Введи своё Имя "</string>
+    <string name="join_game">"Войти в существующую Игру "</string>
+    <string name="host_name">Создать Игру</string>
+    <string name="get_discord_token_error">Произошла какая-то ошибка. Попробуйте еще раз</string>
+    <string name="incorrect_qr_code">QR код неправильный!</string>
 </resources>
