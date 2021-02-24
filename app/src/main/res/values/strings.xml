@@ -10,4 +10,5 @@
     <string name="host_name">Host the Game</string>
     <string name="get_discord_token_error">Some Error happened. Try again</string>
     <string name="incorrect_qr_code">QR code is incorrect!</string>
+    <string name="session_not_exists">Session does not exist!</string>
 </resources>

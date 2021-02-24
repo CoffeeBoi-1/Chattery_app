@@ -7,15 +7,18 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import kotlinx.android.synthetic.main.join_existing_game_dialog.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import org.json.JSONObject
 
 
 class Main_menu : AppCompatActivity() {
@@ -110,30 +113,62 @@ class Main_menu : AppCompatActivity() {
     {
         var scannerView = alertDialog.scannerView
         var mScannerView = ZXingScannerView(alertDialog.context)
-        if(scannerView.findViewWithTag<ZXingScannerView>("mScannerView") != null) scannerView.removeView(scannerView.findViewWithTag<ZXingScannerView>("mScannerView"))
+        if(scannerView.findViewWithTag<ZXingScannerView>("mScannerView") != null) scannerView.removeView(
+            scannerView.findViewWithTag<ZXingScannerView>(
+                "mScannerView"
+            )
+        )
         mScannerView.tag = "mScannerView"
         scannerView.addView(mScannerView)
         mScannerView.startCamera();
         mScannerView.setResultHandler { rawResult ->
             var text = rawResult.text
+            try {
+                if(text.length<4)
+                {
+                    Toast.makeText(this, R.string.incorrect_qr_code, Toast.LENGTH_SHORT).show();
+                    val handler = Handler()
+                    handler.postDelayed({ startScanner(alertDialog) }, 2000)
+                    return@setResultHandler
+                }
 
-            if(text.length<4)
+                if(text.slice(0..3) != "CHR$")
+                {
+                    Toast.makeText(this, R.string.incorrect_qr_code, Toast.LENGTH_SHORT).show();
+                    val handler = Handler()
+                    handler.postDelayed({ startScanner(alertDialog) }, 2000)
+                    return@setResultHandler
+                }
+
+                var sessionID : String = JSONObject(text.substring(4)).get("sessionID") as String
+                var resJson : JSONObject = ServerUtils().execute(
+                    JSONObject().put(
+                        "function",
+                        "SessionExists"
+                    ).put("sessionID", sessionID)
+                ).get()
+                if(resJson.get("res") == false)
+                {
+                    Toast.makeText(this, R.string.session_not_exists, Toast.LENGTH_SHORT).show()
+                    val handler = Handler()
+                    handler.postDelayed({ startScanner(alertDialog) }, 2000)
+                    return@setResultHandler
+                }
+
+                val intent = Intent(this, Session::class.java)
+                intent.putExtra("sessionID", sessionID)
+                startActivity(intent)
+                Animatoo.animateFade(this)
+                finish()
+            }
+            catch (e: Exception)
             {
+                Log.e("MyLog", Log.getStackTraceString(e))
                 Toast.makeText(this, R.string.incorrect_qr_code, Toast.LENGTH_SHORT).show();
                 val handler = Handler()
-                handler.postDelayed({startScanner(alertDialog)},2000)
+                handler.postDelayed({ startScanner(alertDialog) }, 2000)
                 return@setResultHandler
             }
-
-            if(text.slice(0..3) != "CHR$")
-            {
-                Toast.makeText(this, R.string.incorrect_qr_code, Toast.LENGTH_SHORT).show();
-                val handler = Handler()
-                handler.postDelayed({startScanner(alertDialog)},2000)
-                return@setResultHandler
-            }
-
-            var joinCode = text.substring(4)
         }
     }
 }

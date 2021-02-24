@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.foxpoint.chattery">
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main_menu" android:configChanges="orientation" android:screenOrientation="portrait">
+        <activity android:name=".Session"></activity>
+        <activity
+            android:name=".Main_menu"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -23,8 +29,14 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".Reg_menu" android:configChanges="orientation" android:screenOrientation="portrait"/>
-        <activity android:name=".Splashscreen" android:configChanges="orientation" android:screenOrientation="portrait">
+        <activity
+            android:name=".Reg_menu"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Splashscreen"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
