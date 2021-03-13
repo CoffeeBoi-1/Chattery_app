@@ -7,8 +7,17 @@
     <string name="telegram">Telegram</string>
     <string name="enter_your_name">Enter your Name</string>
     <string name="join_game">Join an existing Game</string>
-    <string name="host_name">Host the Game</string>
     <string name="get_discord_token_error">Some Error happened. Try again</string>
     <string name="incorrect_qr_code">QR code is incorrect!</string>
     <string name="session_not_exists">Session does not exist!</string>
+    <string name="leave_game">Do you really want to leave the game?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="game_settings">Game settings</string>
+    <string name="players_amount">"Amount of Players : "</string>
+    <string name="game_cost">"Game Cost : "</string>
+    <string name="host_game">Host the Game</string>
+    <string name="lets_go">Lets GO!</string>
+    <string name="host_game_error">An error occurred while creating the game</string>
+    <string name="session_info_error">An error occurred while retrieving game information</string>
 </resources>

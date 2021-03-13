@@ -8,8 +8,17 @@
     <string name="telegram">Телеграм</string>
     <string name="enter_your_name">"Введи своё Имя "</string>
     <string name="join_game">"Войти в существующую Игру "</string>
-    <string name="host_name">Создать Игру</string>
     <string name="get_discord_token_error">Произошла какая-то ошибка. Попробуйте еще раз</string>
     <string name="incorrect_qr_code">QR код неправильный!</string>
     <string name="session_not_exists">Сессия не существует!</string>
+    <string name="leave_game">" Вы действительно хотите выйти из игры?"</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="game_settings">Настройки игры</string>
+    <string name="players_amount">"Количество Игроков : "</string>
+    <string name="game_cost">"Стоимость Игры : "</string>
+    <string name="host_game">Создать Игру</string>
+    <string name="lets_go">Поехали!</string>
+    <string name="host_game_error">Произошла ошибка во время создания игры</string>
+    <string name="session_info_error">Произошла ошибка во время получения информации о игре</string>
 </resources>

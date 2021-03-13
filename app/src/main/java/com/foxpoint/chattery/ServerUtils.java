@@ -15,6 +15,80 @@ import io.socket.client.Socket;
 
 public class ServerUtils extends AsyncTask<JSONObject, Void, JSONObject>
 {
+    public static JSONObject GetSessionInfo(JSONObject... obj)
+    {
+        JSONObject resJson = null;
+        try
+        {
+            String sessionID = obj[0].getString("sessionID");
+            String password = obj[0].getString("password");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(Constants.MAIN_ROUTER_IP + "session_info?obj={'sessionID' : '"+sessionID+"', 'password':'"+password+"'}")
+                    .get()
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if(response.code() != 200) return new JSONObject().put("error","error");
+            resJson = new JSONObject(response.body().string());
+        }
+        catch (Exception e)
+        {
+            Log.e("MyLog", Log.getStackTraceString(e));
+        }
+        return resJson;
+    }
+
+    public static JSONObject CreateSession(JSONObject... obj)
+    {
+        JSONObject resJson = null;
+        try
+        {
+            int gameCost = obj[0].getInt("gameCost");
+            int playersAmount = obj[0].getInt("playersAmount");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(Constants.MAIN_ROUTER_IP + "create_session?obj={'gameCost':'"+gameCost+"','playersAmount':'"+playersAmount+"'}")
+                    .get()
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            Log.i("MyLog", String.valueOf(response.code()));
+            if(response.code() != 200) return new JSONObject().put("error","error");
+            resJson = new JSONObject(response.body().string());
+        }
+        catch (Exception e)
+        {
+            Log.e("MyLog", Log.getStackTraceString(e));
+        }
+        return resJson;
+    }
+
+    public static boolean PasswordCorrect(JSONObject... obj)
+    {
+        try
+        {
+            String sessionID = obj[0].getString("sessionID");
+            String password = obj[0].getString("password");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(Constants.MAIN_ROUTER_IP + "password_correct?obj={'sessionID' : '"+sessionID+"', 'password':'"+password+"'}")
+                    .get()
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            String resString = response.body().string();
+
+            if(resString.equals("OK")) return true;
+            return false;
+        }
+        catch (Exception e)
+        {
+            Log.e("MyLog", Log.getStackTraceString(e));
+        }
+        return false;
+    }
+
     public static boolean SessionExists(JSONObject... obj)
     {
         try
@@ -28,7 +102,6 @@ public class ServerUtils extends AsyncTask<JSONObject, Void, JSONObject>
 
             Response response = client.newCall(request).execute();
             String resString = response.body().string();
-            Log.i("MyLog",resString);
 
             if(resString.equals("OK")) return true;
             return false;
@@ -36,7 +109,6 @@ public class ServerUtils extends AsyncTask<JSONObject, Void, JSONObject>
         catch (Exception e)
         {
             Log.e("MyLog", Log.getStackTraceString(e));
-            e.printStackTrace();
         }
         return false;
     }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="5dp"
@@ -11,18 +12,4 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:id="@+id/scannerView"/>
-    <Button
-        android:id="@+id/discord_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:backgroundTint="@color/textBlack"
-        android:textColor="#FFFF"
-        android:background="@drawable/rounded_btn_style"
-        android:drawableStart="@drawable/ic_discord_logo"
-        android:fontFamily="@font/comfortaa_bold"
-        android:padding="10dp"
-        android:text="@string/discord"
-        android:textSize="20sp">
-    </Button>
 </LinearLayout>

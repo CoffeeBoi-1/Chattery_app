@@ -27,7 +27,11 @@ class Splashscreen : AppCompatActivity() {
         }
 
         Timer().schedule(1500){
-            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+            val intent = Intent(this@Splashscreen,Main_menu::class.java)
+            startActivity(intent)
+            Animatoo.animateFade(this@Splashscreen)
+            finish()
+            /*var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
 
             if(pref.getString("discordAccessToken",null)==null)
             {
@@ -42,7 +46,7 @@ class Splashscreen : AppCompatActivity() {
                 startActivity(intent)
                 Animatoo.animateFade(this@Splashscreen)
                 finish()
-            }
+            }*/
         }
     }
 
