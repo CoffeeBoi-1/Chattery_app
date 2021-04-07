@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,14 +23,18 @@ public class ServerUtils extends AsyncTask<JSONObject, Void, JSONObject>
         {
             String sessionID = obj[0].getString("sessionID");
             String password = obj[0].getString("password");
-            OkHttpClient client = new OkHttpClient();
+            String nickname = obj[0].getString("nickname");
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .readTimeout(15000, TimeUnit.MILLISECONDS)
+                    .connectTimeout(15000, TimeUnit.MILLISECONDS)
+                    .writeTimeout(15000, TimeUnit.MILLISECONDS)
+                    .build();
             Request request = new Request.Builder()
-                    .url(Constants.MAIN_ROUTER_IP + "session_info?obj={'sessionID' : '"+sessionID+"', 'password':'"+password+"'}")
+                    .url(Constants.MAIN_ROUTER_IP + "session_info?obj={'sessionID' : '"+sessionID+"', 'password':'"+password+"', 'nickname':'"+nickname+"'}")
                     .get()
                     .build();
 
             Response response = client.newCall(request).execute();
-            if(response.code() != 200) return new JSONObject().put("error","error");
             resJson = new JSONObject(response.body().string());
         }
         catch (Exception e)
@@ -44,11 +49,14 @@ public class ServerUtils extends AsyncTask<JSONObject, Void, JSONObject>
         JSONObject resJson = null;
         try
         {
-            int gameCost = obj[0].getInt("gameCost");
             int playersAmount = obj[0].getInt("playersAmount");
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .readTimeout(15000, TimeUnit.MILLISECONDS)
+                    .connectTimeout(15000, TimeUnit.MILLISECONDS)
+                    .writeTimeout(15000, TimeUnit.MILLISECONDS)
+                    .build();
             Request request = new Request.Builder()
-                    .url(Constants.MAIN_ROUTER_IP + "create_session?obj={'gameCost':'"+gameCost+"','playersAmount':'"+playersAmount+"'}")
+                    .url(Constants.MAIN_ROUTER_IP + "create_session?obj={'playersAmount':'"+playersAmount+"'}")
                     .get()
                     .build();
 
@@ -62,55 +70,6 @@ public class ServerUtils extends AsyncTask<JSONObject, Void, JSONObject>
             Log.e("MyLog", Log.getStackTraceString(e));
         }
         return resJson;
-    }
-
-    public static boolean PasswordCorrect(JSONObject... obj)
-    {
-        try
-        {
-            String sessionID = obj[0].getString("sessionID");
-            String password = obj[0].getString("password");
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(Constants.MAIN_ROUTER_IP + "password_correct?obj={'sessionID' : '"+sessionID+"', 'password':'"+password+"'}")
-                    .get()
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            String resString = response.body().string();
-
-            if(resString.equals("OK")) return true;
-            return false;
-        }
-        catch (Exception e)
-        {
-            Log.e("MyLog", Log.getStackTraceString(e));
-        }
-        return false;
-    }
-
-    public static boolean SessionExists(JSONObject... obj)
-    {
-        try
-        {
-            String sessionID = obj[0].getString("sessionID");
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(Constants.MAIN_ROUTER_IP + "session_exists?obj={'sessionID' : '"+sessionID+"' }")
-                    .get()
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            String resString = response.body().string();
-
-            if(resString.equals("OK")) return true;
-            return false;
-        }
-        catch (Exception e)
-        {
-            Log.e("MyLog", Log.getStackTraceString(e));
-        }
-        return false;
     }
 
     public static Socket GetSessionSocket(JSONObject... obj)

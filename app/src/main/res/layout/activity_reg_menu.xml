@@ -21,19 +21,6 @@
     </TextView>
 
     <Button
-        android:id="@+id/discord_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:background="@drawable/rounded_btn_style"
-        android:drawableStart="@drawable/ic_discord_logo"
-        android:fontFamily="@font/comfortaa_bold"
-        android:padding="10dp"
-        android:text="@string/discord"
-        android:textSize="20sp">
-    </Button>
-
-    <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"

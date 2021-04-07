@@ -30,6 +30,8 @@
             android:id="@+id/enter_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:digits="qwertzuiopasdfghjklyxcvbnmйцукенгшщзхъфывапролджэячсмитьбюёQWERTZUIOPASDFGHJKLYXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
+            android:maxLength="10"
             android:background="@drawable/rounded_btn_style"
             android:layout_margin="10dp"
             android:hint="@string/enter_your_name"

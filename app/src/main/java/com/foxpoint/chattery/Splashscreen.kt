@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
@@ -27,13 +28,9 @@ class Splashscreen : AppCompatActivity() {
         }
 
         Timer().schedule(1500){
-            val intent = Intent(this@Splashscreen,Main_menu::class.java)
-            startActivity(intent)
-            Animatoo.animateFade(this@Splashscreen)
-            finish()
-            /*var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
 
-            if(pref.getString("discordAccessToken",null)==null)
+            if(pref.getString("GAME_SETTINGS", null) == null)
             {
                 val intent = Intent(this@Splashscreen,Reg_menu::class.java)
                 startActivity(intent)
@@ -46,7 +43,7 @@ class Splashscreen : AppCompatActivity() {
                 startActivity(intent)
                 Animatoo.animateFade(this@Splashscreen)
                 finish()
-            }*/
+            }
         }
     }
 

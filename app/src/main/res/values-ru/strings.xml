@@ -21,4 +21,16 @@
     <string name="lets_go">Поехали!</string>
     <string name="host_game_error">Произошла ошибка во время создания игры</string>
     <string name="session_info_error">Произошла ошибка во время получения информации о игре</string>
+    <string name="players_joined">Игроков присоединилось :</string>
+    <string name="session_qr_code">QR код для входа в игру</string>
+    <string name="cant_join_session">Ты не можешь зайти в сессию</string>
+    <string name="nickname_unavailable">Этот ник уже занят!</string>
+    <string name="invalid_discord_access_token">Ваш токен доступа к Discord недействителен</string>
+    <string name="input_telegram_number">Введите свой телефон</string>
+    <string name="input_telegram_code">Введите свой Телеграм код</string>
+    <string name="telegram_number_error">Что-то пошло не так! Проверьте свой номер или пароль</string>
+    <string name="enter_password">Пароль (Если есть)</string>
+    <string name="telegram_token_not_working">Ваш Телеграм токен не работает! Перепишите его в настройках</string>
+    <string name="vk_token_not_working">Ваш ВК токен не работает! Перепишите его в настройках</string>
+    <string name="get_token">Получить Токен</string>
 </resources>

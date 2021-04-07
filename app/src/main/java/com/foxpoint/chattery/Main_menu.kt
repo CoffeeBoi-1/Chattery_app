@@ -1,5 +1,6 @@
 package com.foxpoint.chattery
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -13,12 +14,14 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.*
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main_menu.*
+import kotlinx.android.synthetic.main.activity_main_menu.join_game_btn
+import kotlinx.android.synthetic.main.game_info_panel.*
 import kotlinx.android.synthetic.main.game_info_panel.view.*
 import kotlinx.android.synthetic.main.join_existing_game_dialog.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -46,36 +49,74 @@ class Main_menu : AppCompatActivity() {
         }
         RequirePermission()
         logo_img.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_up_slide)
-        enter_name_edittext.animation=AnimationUtils.loadAnimation(
-            this,
-            R.anim.anim_fade_left_slide
-        )
+        enter_name_edittext.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide)
         host_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_right_slide)
         join_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_down_slide)
         //---------------------------------------------------------
         var queryData:Uri? = intent.data
-        var authMethod = queryData?.getQueryParameter("authMethod").toString()
+        var authMethod = queryData?.getQueryParameter("AUTH_METHOD").toString()
 
         when(authMethod)
         {
-            "discord" -> {
+            /*"DISCORD" -> {
                 if (queryData?.getQueryParameter("error") == null) {
-                    DiscordUtils.GetAndSaveAccessToken(
-                        this,
-                        queryData?.getQueryParameter("code").toString()
-                    )
+                    var code = queryData?.getQueryParameter("code").toString()
+                    var resAccessToken : String = LoginUtils()
+                        .execute(JSONObject().put("function", "GetDiscordAccessToken").put("code", code)).get().get("res") as String
+
+                    if(resAccessToken == "error")
+                    {
+                        startActivity(Intent(this@Main_menu, Reg_menu::class.java))
+                        Animatoo.animateFade(this)
+                        finish()
+                        return
+                    }
+                    var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+                    if(pref.getString("GAME_SETTINGS", null) == null)
+                    {
+                        val gameSettings : GameSettings = GameSettings()
+                        gameSettings.DISCORD_ACCESS_TOKEN = resAccessToken
+                        pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
+                    }
+                    else
+                    {
+                        val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
+                        gameSettings.DISCORD_ACCESS_TOKEN = resAccessToken
+                        pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
+                    }
                 } else {
                     startActivity(Intent(this@Main_menu, Reg_menu::class.java))
+                    Animatoo.animateFade(this)
                     finish()
                 }
-            }
+            }*/
         }
 
         host_game_btn.setOnClickListener {
-            ShowHostDialog(R.layout.host_game_dialog)
+            if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH) { enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong)) }
+            else { ShowHostDialog(R.layout.host_game_dialog) }
         }
-
         join_game_btn.setOnClickListener {
+            if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH)
+            {
+                enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong))
+                return@setOnClickListener
+            }
+
+            val resJson = LoginUtils().execute(JSONObject().put("function", "CheckAccounts").put("activity", this)).get().get("res") as JSONObject
+            Log.i("MyLog", resJson.toString())
+            if(resJson.getBoolean("telegram"))
+            {
+                Toast.makeText(this, resources.getString(R.string.telegram_token_not_working), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if(resJson.getBoolean("vk"))
+            {
+                Toast.makeText(this, resources.getString(R.string.vk_token_not_working), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             ShowJoinDialog(R.layout.join_existing_game_dialog)
         }
     }
@@ -114,23 +155,11 @@ class Main_menu : AppCompatActivity() {
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {    }
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {     }
             })
-            val costCounterTextView = alertDialog.window?.findViewById<TextView>(R.id.cost_counter)
-            val seekBarCost = alertDialog.window?.findViewById<SeekBar>(R.id.seek_bar_cost)
-            var costCounter : Int? = seekBarCost?.min
-            seekBarCost?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    costCounterTextView?.text = progress.toString()
-                    costCounter = progress
-                }
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {    }
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {     }
-            })
             alertDialog.window?.findViewById<Button>(R.id.host_game_btn)?.setOnClickListener {
                 if (createGameSent) return@setOnClickListener
                 createGameSent = true
                 var resJson : JSONObject = ServerUtils().execute(JSONObject().put("function", "CreateSession")
-                    .put("gameCost", costCounter).put("playersAmount", playersCounter)).get().get("res") as JSONObject
-                Log.i("MyLog", resJson.toString())
+                    .put("playersAmount", playersCounter)).get().get("res") as JSONObject
                 if(resJson.has("error"))
                 {
                     Toast.makeText(this, R.string.host_game_error, Toast.LENGTH_LONG).show()
@@ -140,6 +169,7 @@ class Main_menu : AppCompatActivity() {
                 val intent = Intent(this, Session::class.java)
                 intent.putExtra("sessionID", resJson.getString("sessionID"))
                 intent.putExtra("password", resJson.getString("password"))
+                intent.putExtra("nickname", enter_name_edittext.text.toString())
                 startActivity(intent)
                 Animatoo.animateFade(this)
                 finish()
@@ -199,43 +229,45 @@ class Main_menu : AppCompatActivity() {
 
                 var sessionID : String = JSONObject(text.substring(4)).get("sessionID") as String
                 var password : String = JSONObject(text.substring(4)).get("password") as String
-                var resJsonSessionExists : JSONObject = ServerUtils().execute(JSONObject().put("function", "SessionExists").put("sessionID", sessionID)).get()
-                if(resJsonSessionExists.get("res") == false)
-                {
-                    Toast.makeText(this, R.string.session_not_exists, Toast.LENGTH_SHORT).show()
-                    val handler = Handler()
-                    handler.postDelayed({ StartScanner(alertDialog) }, 2000)
-                    return@setResultHandler
-                }
 
-                var resJsonPasswordCorrect : JSONObject = ServerUtils().execute(JSONObject().put("function", "PasswordCorrect").put("sessionID", sessionID).put("password", password)).get()
-                if(resJsonPasswordCorrect.get("res") == false)
-                {
-                    Toast.makeText(this, R.string.incorrect_qr_code, Toast.LENGTH_SHORT).show()
-                    val handler = Handler()
-                    handler.postDelayed({ StartScanner(alertDialog) }, 2000)
-                    return@setResultHandler
-                }
+                var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+                val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
 
-                var resJsonSessionInfo : JSONObject = ServerUtils().execute(JSONObject().put("function", "GetSessionInfo").put("sessionID", sessionID).put("password", password)).get().get("res") as JSONObject
+                var resJsonSessionInfo : JSONObject = ServerUtils().execute(JSONObject()
+                    .put("function", "GetSessionInfo")
+                    .put("sessionID", sessionID).put("password", password)
+                    .put("nickname", enter_name_edittext.text.toString())).get().get("res") as JSONObject
                 if(resJsonSessionInfo.has("error"))
                 {
-                    Toast.makeText(this, R.string.session_info_error, Toast.LENGTH_LONG).show()
-                    val handler = Handler()
-                    handler.postDelayed({ StartScanner(alertDialog) }, 2000)
-                    return@setResultHandler
+                    when(resJsonSessionInfo.getString("error"))
+                    {
+                        "invalid_session"->{
+                            Toast.makeText(this, R.string.session_not_exists, Toast.LENGTH_LONG).show()
+                            val handler = Handler()
+                            handler.postDelayed({ StartScanner(alertDialog) }, 2000)
+                            return@setResultHandler
+                        }
+                        "invalid_nickname"->{
+                            Toast.makeText(this, R.string.nickname_unavailable, Toast.LENGTH_LONG).show()
+                            val handler = Handler()
+                            handler.postDelayed({ StartScanner(alertDialog) }, 2000)
+                            return@setResultHandler
+                        }
+                    }
                 }
 
                 var gameInfoPanel = layoutInflater.inflate(R.layout.game_info_panel, alertDialog.main_layout, false)
-                gameInfoPanel.game_cost.text = StringBuilder().append(gameInfoPanel.game_cost.text).append(resJsonSessionInfo.get("gameCost").toString()).toString()
                 gameInfoPanel.players_amount.text = StringBuilder().append(gameInfoPanel.players_amount.text).append(resJsonSessionInfo.get("playersAmount").toString()).toString()
                 alertDialog.main_layout.addView(gameInfoPanel)
-                /*val intent = Intent(this, Session::class.java)
-                intent.putExtra("sessionID", sessionID)
-                intent.putExtra("password", password)
-                startActivity(intent)
-                Animatoo.animateFade(this)
-                finish()*/
+                alertDialog.join_game_btn.setOnClickListener {
+                    val intent = Intent(this, Session::class.java)
+                    intent.putExtra("sessionID", sessionID)
+                    intent.putExtra("password", password)
+                    intent.putExtra("nickname", enter_name_edittext.text.toString())
+                    startActivity(intent)
+                    Animatoo.animateFade(this)
+                    finish()
+                }
             }
             catch (e: Exception)
             {

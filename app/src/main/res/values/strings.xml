@@ -20,4 +20,16 @@
     <string name="lets_go">Lets GO!</string>
     <string name="host_game_error">An error occurred while creating the game</string>
     <string name="session_info_error">An error occurred while retrieving game information</string>
+    <string name="players_joined">Players joined :</string>
+    <string name="session_qr_code">QR code to enter the game</string>
+    <string name="cant_join_session">You Cant join the session</string>
+    <string name="nickname_unavailable">This nickname is Unavailable!</string>
+    <string name="invalid_discord_access_token">Your Discord Access Token is Invalid</string>
+    <string name="input_telegram_number">Enter your phone number</string>
+    <string name="input_telegram_code">Enter your Telegram Code</string>
+    <string name="telegram_number_error">Something went wrong! Check your number or password</string>
+    <string name="enter_password">Password (If exists)</string>
+    <string name="telegram_token_not_working">Your Telegram token is not working! Rewrite it in settings</string>
+    <string name="vk_token_not_working">Your VK token is not working! Rewrite it in settings</string>
+    <string name="get_token">Get Token</string>
 </resources>
