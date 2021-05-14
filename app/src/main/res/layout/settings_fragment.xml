@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:id="@+id/main_layout"
+    android:background="@drawable/rounded_layout"
+    android:fontFamily="@font/comfortaa_bold"
+    android:textColor="@color/textBlack"
+    android:drawableStart="@drawable/ic_check"
+    android:drawablePadding="5dp"
+    android:padding="5dp"
+    android:autoSizeTextType="uniform"
+    android:breakStrategy="simple"
+    android:gravity="center"
+    android:layout_marginBottom="15dp">
+</Button>

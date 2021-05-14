@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/session_game_panel"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:padding="10dp">
     <TextView
+        android:id="@+id/timer"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:id="@+id/timer"
-        android:fontFamily="@font/comfortaa_bold"
-        android:textColor="@color/textBlack"
         android:autoSizeTextType="uniform"
         android:breakStrategy="simple"
-        android:gravity="center">
+        android:fontFamily="@font/comfortaa_bold"
+        android:gravity="center"
+        android:textColor="@color/textBlack"
+        app:layout_constraintTop_toTopOf="parent">
     </TextView>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="550dp"
-        android:id="@+id/dialog_viewer"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:fadingEdgeLength="30dp"
+        android:requiresFadingEdge="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/make_choice_btn"
+        app:layout_constraintTop_toBottomOf="@+id/timer">
+        <LinearLayout
+            android:id="@+id/dialog_viewer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
     <Button
+        android:id="@+id/make_choice_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/host_game_btn"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/textBlack"
-        android:textColor="#FFFF"
         android:background="@drawable/rounded_btn_style"
-        android:drawableStart="@drawable/ic_discord_logo"
+        android:backgroundTint="@color/textBlack"
         android:fontFamily="@font/comfortaa_bold"
         android:padding="10dp"
-        android:text="@string/host_game"
-        android:textSize="20sp">
+        android:text="@string/make_choice"
+        android:textColor="#FFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent">
     </Button>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -51,69 +51,59 @@ class Main_menu : AppCompatActivity() {
         logo_img.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_up_slide)
         enter_name_edittext.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide)
         host_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_right_slide)
-        join_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_down_slide)
+        join_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide)
+        settings_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_down_slide)
         //---------------------------------------------------------
-        var queryData:Uri? = intent.data
-        var authMethod = queryData?.getQueryParameter("AUTH_METHOD").toString()
-
-        when(authMethod)
-        {
-            /*"DISCORD" -> {
-                if (queryData?.getQueryParameter("error") == null) {
-                    var code = queryData?.getQueryParameter("code").toString()
-                    var resAccessToken : String = LoginUtils()
-                        .execute(JSONObject().put("function", "GetDiscordAccessToken").put("code", code)).get().get("res") as String
-
-                    if(resAccessToken == "error")
-                    {
-                        startActivity(Intent(this@Main_menu, Reg_menu::class.java))
-                        Animatoo.animateFade(this)
-                        finish()
-                        return
-                    }
-                    var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
-                    if(pref.getString("GAME_SETTINGS", null) == null)
-                    {
-                        val gameSettings : GameSettings = GameSettings()
-                        gameSettings.DISCORD_ACCESS_TOKEN = resAccessToken
-                        pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
-                    }
-                    else
-                    {
-                        val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
-                        gameSettings.DISCORD_ACCESS_TOKEN = resAccessToken
-                        pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
-                    }
-                } else {
-                    startActivity(Intent(this@Main_menu, Reg_menu::class.java))
-                    Animatoo.animateFade(this)
-                    finish()
-                }
-            }*/
+        settings_btn.setOnClickListener {
+            val intent = Intent(this, Settings::class.java)
+            startActivity(intent)
+            Animatoo.animateFade(this)
         }
-
         host_game_btn.setOnClickListener {
-            if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH) { enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong)) }
-            else { ShowHostDialog(R.layout.host_game_dialog) }
-        }
-        join_game_btn.setOnClickListener {
+            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+            val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
             if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH)
             {
                 enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong))
                 return@setOnClickListener
             }
 
-            val resJson = LoginUtils().execute(JSONObject().put("function", "CheckAccounts").put("activity", this)).get().get("res") as JSONObject
-            Log.i("MyLog", resJson.toString())
-            if(resJson.getBoolean("telegram"))
+            val resJsonAcc = LoginUtils().execute(JSONObject().put("function", "CheckAccounts").put("activity", this)).get().get("res") as JSONObject
+            val resJsonDialogsTG = LoginUtils().execute(JSONObject().put("function", "GetTelegramDialogsAmount").put("activity", this)).get().get("res") as Int
+            if(resJsonAcc.getBoolean("telegram"))
             {
                 Toast.makeText(this, resources.getString(R.string.telegram_token_not_working), Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            if(resJson.getBoolean("vk"))
+            if(!resJsonAcc.getBoolean("telegram") && resJsonDialogsTG - gameSettings.TELEGRAM_BLACKLIST.size < Constants.MIN_DIALOGS_AMOUNT)
             {
-                Toast.makeText(this, resources.getString(R.string.vk_token_not_working), Toast.LENGTH_LONG).show()
+                Toast.makeText(this, resources.getString(R.string.not_enough_dialogs_tg), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            ShowHostDialog(R.layout.host_game_dialog)
+        }
+        join_game_btn.setOnClickListener {
+            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+            val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
+            if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH)
+            {
+                enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong))
+                return@setOnClickListener
+            }
+
+            val resJsonAcc = LoginUtils().execute(JSONObject().put("function", "CheckAccounts").put("activity", this)).get().get("res") as JSONObject
+            val resJsonDialogsTG = LoginUtils().execute(JSONObject().put("function", "GetTelegramDialogsAmount").put("activity", this)).get().get("res") as Int
+            if(resJsonAcc.getBoolean("telegram"))
+            {
+                Toast.makeText(this, resources.getString(R.string.telegram_token_not_working), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if(!resJsonAcc.getBoolean("telegram") && resJsonDialogsTG - gameSettings.TELEGRAM_BLACKLIST.size < Constants.MIN_DIALOGS_AMOUNT)
+            {
+                Toast.makeText(this, resources.getString(R.string.not_enough_dialogs_tg), Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 

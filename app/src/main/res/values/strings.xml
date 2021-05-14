@@ -32,4 +32,17 @@
     <string name="telegram_token_not_working">Your Telegram token is not working! Rewrite it in settings</string>
     <string name="vk_token_not_working">Your VK token is not working! Rewrite it in settings</string>
     <string name="get_token">Get Token</string>
+    <string name="make_choice">Make a choice</string>
+    <string name="player_selected">Player has been Selected!</string>
+    <string name="you_won">You won!</string>
+    <string name="you_lose">You lose(</string>
+    <string name="correct_answer">The correct answer is :</string>
+    <string name="he_won">Won this game!</string>
+    <string name="restart_game">Restart Game?</string>
+    <string name="not_enough_dialogs_tg">Not enough dialogs in Telegram</string>
+    <string name="save">Save</string>
+    <string name="blacklist_dialog">What dialogues should be shown in the game?</string>
+    <string name="login_telegram">Login with Telegram</string>
+    <string name="disable_acc">Disable Account?</string>
+    <integer name="com_vk_sdk_AppId">7850444</integer>
 </resources>

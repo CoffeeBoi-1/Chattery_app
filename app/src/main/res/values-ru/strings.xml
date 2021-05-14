@@ -33,4 +33,16 @@
     <string name="telegram_token_not_working">Ваш Телеграм токен не работает! Перепишите его в настройках</string>
     <string name="vk_token_not_working">Ваш ВК токен не работает! Перепишите его в настройках</string>
     <string name="get_token">Получить Токен</string>
+    <string name="make_choice">Сделать выбор</string>
+    <string name="player_selected">Игрок выбран!</string>
+    <string name="you_won">Ты выиграл!</string>
+    <string name="you_lose">Ты проиграл(</string>
+    <string name="correct_answer">Правильный ответ это :</string>
+    <string name="he_won">Выиграл эту игру!</string>
+    <string name="restart_game">Перезапустить игру?</string>
+    <string name="save">Сохранить</string>
+    <string name="blacklist_dialog">Какие диалоги показывать в игре?</string>
+    <string name="not_enough_dialogs_tg">Не хватает диалогов в Telegram</string>
+    <string name="login_telegram">Войти через Телеграм</string>
+    <string name="disable_acc">Отключить аккаунт?</string>
 </resources>

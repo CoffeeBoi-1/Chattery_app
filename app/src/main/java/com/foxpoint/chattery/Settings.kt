@@ -1,5 +1,6 @@
 package com.foxpoint.chattery
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,28 +9,40 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.vk.api.sdk.VK
-import com.vk.api.sdk.auth.VKAccessToken
-import com.vk.api.sdk.auth.VKAuthCallback
-import com.vk.api.sdk.auth.VKScope
-import com.vk.api.sdk.utils.VKUtils.getCertificateFingerprint
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_reg_menu.*
+import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.reg_telegram_dialog.*
+import kotlinx.android.synthetic.main.settings_page.*
+import kotlinx.android.synthetic.main.settings_page.view.*
+import kotlinx.android.synthetic.main.telegram_login_button.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
+import kotlin.coroutines.CoroutineContext
 
-
-class Reg_menu : AppCompatActivity() {
+class Settings : AppCompatActivity(), CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
     private var dialogShowed = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reg_menu)
-        val decorView=window.decorView;
+        setContentView(R.layout.activity_settings)
+        val decorView=window.decorView
         decorView.systemUiVisibility= (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -38,33 +51,44 @@ class Reg_menu : AppCompatActivity() {
             val attrib = window.attributes
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
-        choose_login_method_text.animation = AnimationUtils.loadAnimation(
-            this,
-            R.anim.anim_fade_up_slide
-        )
-        vk_btn.animation = AnimationUtils.loadAnimation(this, R.anim.anim_fade_right_slide)
-        telegram_btn.animation = AnimationUtils.loadAnimation(this, R.anim.anim_fade_down_slide)
-        //---------------------------------------------------------------------------------------------
-        vk_btn.setOnClickListener {
-            VK.login(this, arrayListOf(VKScope.MESSAGES))
-        }
-        telegram_btn.setOnClickListener {
-            ShownDialog(R.layout.reg_telegram_dialog)
+        //---------------------------------------------------------
+        var pageAdapter = MyFragmentPagerAdapter(supportFragmentManager)
+        viewPager.adapter = pageAdapter
+        launch {
+            DrawRecycler()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val callback = object: VKAuthCallback {
-            override fun onLogin(token: VKAccessToken) {
-                Log.i("MyLog", "da")
-            }
+    fun DrawRecycler()
+    {
+        val tgDialogs = GameUtils().execute(JSONObject().put("function", "GetTelegramDialogs").put("activity", this)).get().get("res") as HashMap<*, *>
 
-            override fun onLoginFailed(errorCode: Int) {
-                Log.i("MyLog", "net")
+        if(tgDialogs.isNotEmpty())
+        {
+            viewPager.get(0).disable_acc_btn.visibility = View.VISIBLE
+            viewPager.get(0).settings_progress_bar.visibility = View.GONE
+            var recyclerAdapter = SettingsRecyclerViewAdapter(this, "telegram", toArray<String>(tgDialogs.values), toArray<Int>(tgDialogs.keys))
+            (viewPager.get(0).recycler as RecyclerView).adapter = recyclerAdapter
+            (viewPager.get(0).recycler as RecyclerView).layoutManager = LinearLayoutManager(this)
+            viewPager.get(0).disable_acc_btn.setOnClickListener {
+                var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+                val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
+                gameSettings.TELEGRAM_ACCESS_TOKEN = byteArrayOf()
+                gameSettings.TELEGRAM_BLACKLIST = HashMap<Int, String>()
+                gameSettings.TELEGRAM_CLIENT_ID = 0
+                gameSettings.TELEGRAM_DATA_CENTER = ""
+                pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
+                startActivity(intent)
+                finish()
             }
         }
-        if (data == null || !VK.onActivityResult(requestCode, resultCode, data, callback)) {
-            super.onActivityResult(requestCode, resultCode, data)
+        else
+        {
+            viewPager.get(0).settings_progress_bar.visibility = View.GONE
+            layoutInflater.inflate(R.layout.telegram_login_button, viewPager.get(0).main_layout, true)
+            viewPager.get(0).telegram_btn.setOnClickListener {
+                ShownDialog(R.layout.reg_telegram_dialog)
+            }
         }
     }
 
@@ -125,17 +149,21 @@ class Reg_menu : AppCompatActivity() {
                 }
                 else
                 {
-                    startActivity(Intent(this, Main_menu::class.java))
-                    Animatoo.animateFade(this)
-                    finish()
+                    viewPager.get(0).main_layout.removeView(telegram_btn)
+                    alertDialog.dismiss()
+                    DrawRecycler()
                 }
             }
         }
     }
 
+    inline fun <reified T> toArray(list: MutableCollection<*>): Array<T> {
+        return (list as MutableCollection<T>).toTypedArray()
+    }
+
     override fun onResume() {
         super.onResume()
-        val decorView=window.decorView;
+        val decorView=window.decorView
         decorView.systemUiVisibility= (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -148,7 +176,7 @@ class Reg_menu : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        val decorView=window.decorView;
+        val decorView=window.decorView
         decorView.systemUiVisibility= (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -158,4 +186,17 @@ class Reg_menu : AppCompatActivity() {
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
     }
+
+    private class MyFragmentPagerAdapter(fm: FragmentManager?) :
+        FragmentPagerAdapter(fm!!) {
+        val PAGE_COUNT = 1;
+        override fun getItem(position: Int): Fragment {
+            return SettingsPage.newInstance(position)
+        }
+
+        override fun getCount(): Int {
+            return PAGE_COUNT
+        }
+    }
 }
+

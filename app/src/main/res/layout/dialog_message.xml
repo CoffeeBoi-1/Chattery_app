@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:backgroundTint="@color/textBlack"
+        android:textColor="#FFFF"
+        android:background="@drawable/rounded_btn_style"
+        android:fontFamily="@font/comfortaa_bold"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:maxWidth="280dp">
+    </TextView>
+</RelativeLayout>

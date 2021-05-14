@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/telegram_btn"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="15dp"
+    android:backgroundTint="@color/textBlack"
+    android:textColor="#FFFF"
+    android:background="@drawable/rounded_btn_style"
+    android:drawableStart="@drawable/ic_telegram_logo"
+    android:fontFamily="@font/comfortaa_bold"
+    android:padding="10dp"
+    android:text="@string/login_telegram"
+    android:textSize="20sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+</Button>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,56 +7,77 @@
     tools:context=".Main_menu"
     android:orientation="vertical"
     android:background="@drawable/backgroundpink">
-    <LinearLayout
+
+    <ImageView
+        android:id="@+id/logo_img"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageView
-            android:id="@+id/logo_img"
-            android:layout_width="match_parent"
-            android:layout_height="380dp"
-            android:layout_margin="15dp"
-            android:src="@drawable/ic_vk_logo"
-            android:layout_gravity="center">
-        </ImageView>
-    </LinearLayout>
-    <LinearLayout
+        android:layout_height="380dp"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_vk_logo"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="15dp">
+    </ImageView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:gravity="top"
+        android:orientation="vertical"
         android:padding="15dp"
-        android:orientation="vertical">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo_img"
+        tools:layout_editor_absoluteX="15dp">
+
         <EditText
             android:id="@+id/enter_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:digits="qwertzuiopasdfghjklyxcvbnmйцукенгшщзхъфывапролджэячсмитьбюёQWERTZUIOPASDFGHJKLYXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
-            android:maxLength="10"
-            android:background="@drawable/rounded_btn_style"
             android:layout_margin="10dp"
+            android:background="@drawable/rounded_btn_style"
+            android:digits="qwertzuiopasdfghjklyxcvbnmйцукенгшщзхъфывапролджэячсмитьбюёQWERTZUIOPASDFGHJKLYXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
+            android:fontFamily="@font/comfortaa_bold"
             android:hint="@string/enter_your_name"
+            android:maxLength="10"
             android:padding="10dp"
-            android:fontFamily="@font/comfortaa_bold">
+            app:layout_constraintBottom_toTopOf="@id/host_game_btn"
+            app:layout_constraintTop_toTopOf="parent">
         </EditText>
+
         <Button
             android:id="@+id/host_game_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/rounded_btn_style"
-            android:layout_marginTop="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_btn_style"
+            android:fontFamily="@font/comfortaa_bold"
             android:text="@string/host_game"
-            android:fontFamily="@font/comfortaa_bold">
+            app:layout_constraintTop_toBottomOf="@id/enter_name_edittext"
+            app:layout_constraintBottom_toTopOf="@id/join_game_btn">
         </Button>
+
         <Button
             android:id="@+id/join_game_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/join_game"
-            android:background="@drawable/rounded_btn_style"
             android:layout_margin="10dp"
-            android:fontFamily="@font/comfortaa_bold">
+            android:background="@drawable/rounded_btn_style"
+            android:fontFamily="@font/comfortaa_bold"
+            android:text="@string/join_game"
+            app:layout_constraintBottom_toTopOf="@id/settings_btn"
+            app:layout_constraintTop_toBottomOf="@id/host_game_btn">
         </Button>
-    </LinearLayout>
-</LinearLayout>
+
+        <Button
+            android:id="@+id/settings_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/ic_settings"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/join_game_btn">
+        </Button>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
