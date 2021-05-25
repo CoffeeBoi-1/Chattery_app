@@ -2,6 +2,7 @@ package com.foxpoint.chattery;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private final String names[];
     private final Integer ids[];
     private final String social;
+    private final MediaPlayer buttonClickSoundMP;
 
     public SettingsRecyclerViewAdapter(Context context, String social, String[] names, Integer[] ids)
     {
@@ -29,6 +31,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         this.names = names;
         this.ids = ids;
         this.social = social;
+        this.buttonClickSoundMP = MediaPlayer.create(context, R.raw.button_click_sound);
     }
 
     @NonNull
@@ -53,6 +56,7 @@ public class SettingsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             btn.setText(names[position]);
             btn.setOnClickListener(v -> {
+                buttonClickSoundMP.start();
                 GameSettings gameSettings = new Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings.class);
                 if(gameSettings.TELEGRAM_BLACKLIST == null) gameSettings.TELEGRAM_BLACKLIST = new HashMap<Integer, String>();
 

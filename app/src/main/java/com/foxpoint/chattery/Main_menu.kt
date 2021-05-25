@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -34,6 +35,9 @@ class Main_menu : AppCompatActivity() {
     var joinDialogShowed = false
     var hostDialogShowed = false
     var createGameSent = false
+    var joinedSession = false
+    lateinit var cancelSoundMP : MediaPlayer
+    lateinit var buttonClickSoundMP : MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,13 +52,17 @@ class Main_menu : AppCompatActivity() {
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
         RequirePermission()
-        logo_img.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_up_slide)
+        chattery.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_up_slide)
         enter_name_edittext.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide)
         host_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_right_slide)
         join_game_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide)
         settings_btn.animation=AnimationUtils.loadAnimation(this, R.anim.anim_fade_down_slide)
+
+        cancelSoundMP = MediaPlayer.create(this, R.raw.cancel_sound)
+        buttonClickSoundMP = MediaPlayer.create(this, R.raw.button_click_sound)
         //---------------------------------------------------------
         settings_btn.setOnClickListener {
+            buttonClickSoundMP.start()
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
             Animatoo.animateFade(this)
@@ -65,8 +73,10 @@ class Main_menu : AppCompatActivity() {
             if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH)
             {
                 enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong))
+                cancelSoundMP.start()
                 return@setOnClickListener
             }
+            buttonClickSoundMP.start()
 
             val resJsonAcc = LoginUtils().execute(JSONObject().put("function", "CheckAccounts").put("activity", this)).get().get("res") as JSONObject
             val resJsonDialogsTG = LoginUtils().execute(JSONObject().put("function", "GetTelegramDialogsAmount").put("activity", this)).get().get("res") as Int
@@ -90,8 +100,10 @@ class Main_menu : AppCompatActivity() {
             if(enter_name_edittext.text.length < Constants.MIN_NAME_LENGTH)
             {
                 enter_name_edittext.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_shake_wrong))
+                cancelSoundMP.start()
                 return@setOnClickListener
             }
+            buttonClickSoundMP.start()
 
             val resJsonAcc = LoginUtils().execute(JSONObject().put("function", "CheckAccounts").put("activity", this)).get().get("res") as JSONObject
             val resJsonDialogsTG = LoginUtils().execute(JSONObject().put("function", "GetTelegramDialogsAmount").put("activity", this)).get().get("res") as Int
@@ -148,6 +160,7 @@ class Main_menu : AppCompatActivity() {
             alertDialog.window?.findViewById<Button>(R.id.host_game_btn)?.setOnClickListener {
                 if (createGameSent) return@setOnClickListener
                 createGameSent = true
+                buttonClickSoundMP.start()
                 var resJson : JSONObject = ServerUtils().execute(JSONObject().put("function", "CreateSession")
                     .put("playersAmount", playersCounter)).get().get("res") as JSONObject
                 if(resJson.has("error"))
@@ -250,6 +263,9 @@ class Main_menu : AppCompatActivity() {
                 gameInfoPanel.players_amount.text = StringBuilder().append(gameInfoPanel.players_amount.text).append(resJsonSessionInfo.get("playersAmount").toString()).toString()
                 alertDialog.main_layout.addView(gameInfoPanel)
                 alertDialog.join_game_btn.setOnClickListener {
+                    if (joinedSession) return@setOnClickListener
+                    joinedSession = true
+                    buttonClickSoundMP.start()
                     val intent = Intent(this, Session::class.java)
                     intent.putExtra("sessionID", sessionID)
                     intent.putExtra("password", password)

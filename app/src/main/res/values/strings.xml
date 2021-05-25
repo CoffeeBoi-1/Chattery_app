@@ -45,4 +45,6 @@
     <string name="login_telegram">Login with Telegram</string>
     <string name="disable_acc">Disable Account?</string>
     <integer name="com_vk_sdk_AppId">7850444</integer>
+    <string name="personal_data">All personal data is stored only on your phone</string>
+    <string name="guess_dialog">Guess, whose Dialog?</string>
 </resources>

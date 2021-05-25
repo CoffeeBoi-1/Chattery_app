@@ -59,7 +59,6 @@
         android:backgroundTint="@color/textBlack"
         android:textColor="#FFFF"
         android:background="@drawable/rounded_btn_style"
-        android:drawableStart="@drawable/ic_discord_logo"
         android:fontFamily="@font/comfortaa_bold"
         android:padding="10dp"
         android:text="@string/host_game"

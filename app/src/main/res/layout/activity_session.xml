@@ -8,6 +8,6 @@
     android:id="@+id/main_layout"
     tools:context=".Session"
     android:orientation="vertical"
-    android:background="@color/background_gray">
+    android:background="@color/textBlack">
 
 </LinearLayout>

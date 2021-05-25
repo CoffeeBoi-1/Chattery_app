@@ -6,19 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".Main_menu"
     android:orientation="vertical"
-    android:background="@drawable/backgroundpink">
+    android:background="@color/textBlack">
 
-    <ImageView
-        android:id="@+id/logo_img"
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:layout_gravity="center"
-        android:layout_margin="15dp"
-        android:src="@drawable/ic_vk_logo"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="15dp">
-    </ImageView>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
@@ -28,8 +18,42 @@
         android:orientation="vertical"
         android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_img"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="15dp">
+
+        <LinearLayout
+            android:id="@+id/chattery"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:background="@drawable/rounded_layout"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:fontFamily="@font/comfortaa_bold"
+                android:gravity="center"
+                android:text="Chattery"
+                android:textColor="@color/textBlack"
+                android:autoSizeTextType="uniform"
+                android:breakStrategy="simple"
+                android:textSize="79sp"
+                app:layout_constraintTop_toTopOf="parent">
+            </TextView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:fontFamily="@font/comfortaa_bold"
+                android:gravity="center"
+                android:text="@string/guess_dialog"
+                android:textColor="@color/textBlack"
+                android:autoSizeTextType="uniform"
+                android:breakStrategy="simple"
+                android:textSize="30sp"
+                app:layout_constraintTop_toTopOf="parent">
+            </TextView>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/enter_name_edittext"
@@ -43,7 +67,7 @@
             android:maxLength="10"
             android:padding="10dp"
             app:layout_constraintBottom_toTopOf="@id/host_game_btn"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/chattery">
         </EditText>
 
         <Button

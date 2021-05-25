@@ -13,7 +13,6 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 class Splashscreen : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splashscreen)
@@ -27,23 +26,11 @@ class Splashscreen : AppCompatActivity() {
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
 
-        Timer().schedule(1500){
-            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
-
-            if(pref.getString("GAME_SETTINGS", null) == null)
-            {
-                val intent = Intent(this@Splashscreen,Reg_menu::class.java)
-                startActivity(intent)
-                Animatoo.animateFade(this@Splashscreen)
-                finish()
-            }
-            else
-            {
-                val intent = Intent(this@Splashscreen,Main_menu::class.java)
-                startActivity(intent)
-                Animatoo.animateFade(this@Splashscreen)
-                finish()
-            }
+        Timer().schedule(2100){
+            val intent = Intent(this@Splashscreen,Main_menu::class.java)
+            startActivity(intent)
+            Animatoo.animateFade(this@Splashscreen)
+            finish()
         }
     }
 

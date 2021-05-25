@@ -10,30 +10,24 @@ import com.github.badoualy.telegram.api.Kotlogram;
 import com.github.badoualy.telegram.api.TelegramApp;
 import com.github.badoualy.telegram.api.TelegramClient;
 import com.github.badoualy.telegram.tl.api.TLAbsInputPeer;
-import com.github.badoualy.telegram.tl.api.TLAbsMessage;
-import com.github.badoualy.telegram.tl.api.TLAbsMessageAction;
+
 import com.github.badoualy.telegram.tl.api.TLAbsPeer;
 import com.github.badoualy.telegram.tl.api.TLAbsUser;
 import com.github.badoualy.telegram.tl.api.TLChannel;
-import com.github.badoualy.telegram.tl.api.TLChannelForbidden;
 import com.github.badoualy.telegram.tl.api.TLChat;
-import com.github.badoualy.telegram.tl.api.TLChatEmpty;
-import com.github.badoualy.telegram.tl.api.TLChatForbidden;
-import com.github.badoualy.telegram.tl.api.TLDialog;
 import com.github.badoualy.telegram.tl.api.TLInputPeerChannel;
 import com.github.badoualy.telegram.tl.api.TLInputPeerChat;
 import com.github.badoualy.telegram.tl.api.TLInputPeerEmpty;
 import com.github.badoualy.telegram.tl.api.TLInputPeerUser;
 import com.github.badoualy.telegram.tl.api.TLMessage;
-import com.github.badoualy.telegram.tl.api.TLMessageService;
 import com.github.badoualy.telegram.tl.api.TLPeerChannel;
 import com.github.badoualy.telegram.tl.api.TLPeerChat;
 import com.github.badoualy.telegram.tl.api.TLPeerUser;
 import com.github.badoualy.telegram.tl.api.TLUser;
 import com.github.badoualy.telegram.tl.api.messages.TLAbsDialogs;
 import com.github.badoualy.telegram.tl.api.messages.TLAbsMessages;
+import com.github.badoualy.telegram.tl.api.messages.TLMessagesSlice;
 import com.github.badoualy.telegram.tl.core.TLObject;
-import com.github.badoualy.telegram.tl.core.TLVector;
 import com.github.badoualy.telegram.tl.exception.RpcErrorException;
 import com.google.gson.Gson;
 
@@ -43,9 +37,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Random;
 
 public class GameUtils extends AsyncTask<JSONObject, Void, JSONObject>
 {
@@ -65,7 +57,8 @@ public class GameUtils extends AsyncTask<JSONObject, Void, JSONObject>
 
             while (true)
             {
-                int randKey = new Random().nextInt(dialogs.getDialogs().size());
+                int randKey = GetRandomInteger(0, dialogs.getDialogs().size()-1);
+                Log.i("MyLog", "RAND KEY : " + String.valueOf(randKey));
                 TLAbsInputPeer inputPeer_ = getInputPeer(dialogs, randKey);
                 if(inputPeer_.getClass() == TLInputPeerUser.class && !gameSettings.TELEGRAM_BLACKLIST.containsKey(((TLInputPeerUser) inputPeer_).getUserId()))
                 {
@@ -75,7 +68,18 @@ public class GameUtils extends AsyncTask<JSONObject, Void, JSONObject>
                 dialogs.getDialogs().remove(randKey);
             }
 
-            TLAbsMessages messages = client.messagesGetHistory(inputPeer, 0, 0, 0, 5000, 0, 0);
+            //нужно нормальное количество сообщений
+            TLAbsMessages messages = client.messagesGetHistory(inputPeer, 0, 0, 0, 100, 0, 0);
+            Integer offset;
+            try {
+                offset = GetRandomInteger(0, ((TLMessagesSlice)messages).getCount()-15);
+            }
+            catch (Exception e)
+            {
+                offset = 0;
+            }
+            messages = client.messagesGetHistory(inputPeer, 0, 0, offset, 100, 0, 0);
+
             int messagesAmount = 0;
             int messagesID = 0;
             JSONArray dialog = new JSONArray();
@@ -87,7 +91,9 @@ public class GameUtils extends AsyncTask<JSONObject, Void, JSONObject>
             if(messages.getMessages().size() >= Constants.MAX_MESSAGES_AMOUNT)
             {
                 messagesAmount = Constants.MAX_MESSAGES_AMOUNT - 1;
-                messagesID = new Random().nextInt(messages.getMessages().size() - 14) + 14;
+                messagesID = GetRandomInteger(14, messages.getMessages().size()-1);
+                Log.i("MyLog", "messagesID : " + String.valueOf(messagesID));
+                Log.i("MyLog", "messages size : " + String.valueOf(messages.getMessages().size()));
             }
             if(messages.getMessages().size() == 0) return resJson;
 
@@ -124,8 +130,13 @@ public class GameUtils extends AsyncTask<JSONObject, Void, JSONObject>
             return createNameMap(dialogs);
         } catch (JSONException | RpcErrorException | IOException e) {
             Log.e("MyLog", Log.getStackTraceString(e));
+            return res;
         }
-        return res;
+    }
+
+    private static Integer GetRandomInteger(Integer min, Integer max)
+    {
+        return (int)(( Math.random() * (max - min + 1) + min));
     }
 
     public static HashMap<Integer, String> createNameMap(TLAbsDialogs tlAbsDialogs) {

@@ -1,33 +1,22 @@
 package com.foxpoint.chattery
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_reg_menu.*
 import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.reg_telegram_dialog.*
-import kotlinx.android.synthetic.main.settings_page.*
-import kotlinx.android.synthetic.main.settings_page.view.*
-import kotlinx.android.synthetic.main.telegram_login_button.view.*
+import kotlinx.android.synthetic.main.telegram_login_button.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +27,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
     private var dialogShowed = false;
+    lateinit var buttonClickSoundMP : MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +41,8 @@ class Settings : AppCompatActivity(), CoroutineScope {
             val attrib = window.attributes
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
+        buttonClickSoundMP = MediaPlayer.create(this, R.raw.button_click_sound)
         //---------------------------------------------------------
-        var pageAdapter = MyFragmentPagerAdapter(supportFragmentManager)
-        viewPager.adapter = pageAdapter
         launch {
             DrawRecycler()
         }
@@ -65,12 +54,13 @@ class Settings : AppCompatActivity(), CoroutineScope {
 
         if(tgDialogs.isNotEmpty())
         {
-            viewPager.get(0).disable_acc_btn.visibility = View.VISIBLE
-            viewPager.get(0).settings_progress_bar.visibility = View.GONE
+            disable_acc_btn.visibility = View.VISIBLE
+            settings_progress_bar.visibility = View.GONE
             var recyclerAdapter = SettingsRecyclerViewAdapter(this, "telegram", toArray<String>(tgDialogs.values), toArray<Int>(tgDialogs.keys))
-            (viewPager.get(0).recycler as RecyclerView).adapter = recyclerAdapter
-            (viewPager.get(0).recycler as RecyclerView).layoutManager = LinearLayoutManager(this)
-            viewPager.get(0).disable_acc_btn.setOnClickListener {
+            (recycler as RecyclerView).adapter = recyclerAdapter
+            (recycler as RecyclerView).layoutManager = LinearLayoutManager(this)
+            disable_acc_btn.setOnClickListener {
+                buttonClickSoundMP.start()
                 var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
                 val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
                 gameSettings.TELEGRAM_ACCESS_TOKEN = byteArrayOf()
@@ -84,9 +74,10 @@ class Settings : AppCompatActivity(), CoroutineScope {
         }
         else
         {
-            viewPager.get(0).settings_progress_bar.visibility = View.GONE
-            layoutInflater.inflate(R.layout.telegram_login_button, viewPager.get(0).main_layout, true)
-            viewPager.get(0).telegram_btn.setOnClickListener {
+            settings_progress_bar.visibility = View.GONE
+            layoutInflater.inflate(R.layout.telegram_login_button, main_layout, true)
+            telegram_btn.setOnClickListener {
+                buttonClickSoundMP.start()
                 ShownDialog(R.layout.reg_telegram_dialog)
             }
         }
@@ -105,6 +96,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
         alertDialog.show()
 
         alertDialog.send_telegram_number_btn.setOnClickListener {
+            buttonClickSoundMP.start()
             var number = alertDialog.enter_number_edittext.text.toString()
             var resJsonNumber : JSONObject = LoginUtils().execute(
                 JSONObject().put(
@@ -128,6 +120,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
             alertDialog.enter_number_edittext.setText("")
             alertDialog.enter_number_edittext.hint = resources.getString(R.string.input_telegram_code)
             alertDialog.send_telegram_number_btn.setOnClickListener {
+                buttonClickSoundMP.start()
                 var resJsonCode = LoginUtils().execute(
                     JSONObject().put("function", "TelegramAuth")
                         .put("activity", this)
@@ -149,7 +142,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
                 }
                 else
                 {
-                    viewPager.get(0).main_layout.removeView(telegram_btn)
+                    main_layout.removeView(telegram_btn)
                     alertDialog.dismiss()
                     DrawRecycler()
                 }
@@ -184,18 +177,6 @@ class Settings : AppCompatActivity(), CoroutineScope {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val attrib = window.attributes
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-        }
-    }
-
-    private class MyFragmentPagerAdapter(fm: FragmentManager?) :
-        FragmentPagerAdapter(fm!!) {
-        val PAGE_COUNT = 1;
-        override fun getItem(position: Int): Fragment {
-            return SettingsPage.newInstance(position)
-        }
-
-        override fun getCount(): Int {
-            return PAGE_COUNT
         }
     }
 }

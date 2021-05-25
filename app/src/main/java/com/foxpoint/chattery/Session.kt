@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -43,6 +44,7 @@ class Session : AppCompatActivity() {
     var playerSelected = false
     var newRoundDialogShowed = false
     var restartGameDialogShowed = false
+    lateinit var buttonClickSoundMP : MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +58,7 @@ class Session : AppCompatActivity() {
             val attrib = window.attributes
             attrib.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
+        buttonClickSoundMP = MediaPlayer.create(this, R.raw.button_click_sound)
         //---------------------------------------------------------
         if (savedInstanceState != null) return
 
@@ -110,7 +113,7 @@ class Session : AppCompatActivity() {
                     if (!SESSION_OBJECT.isWaitingStage) return@runOnUiThread
                     var qrCode =
                         QRCode.from(args?.get(0).toString()).withSize(1000, 1000).withColor(
-                            Color.BLACK,
+                            Color.WHITE,
                             Color.TRANSPARENT
                         ).bitmap()
                     this.waiting_players_panel.qr_code_progress_bar.visibility = View.GONE
@@ -179,6 +182,7 @@ class Session : AppCompatActivity() {
                     }
 
                     make_choice_btn.setOnClickListener {
+                        buttonClickSoundMP.start()
                         ShowChooseDialog(R.layout.make_choice_dialog)
                     }
 
@@ -225,8 +229,8 @@ class Session : AppCompatActivity() {
             { args ->
                 runOnUiThread {
                     //request_for_round
-                    if(!(args[0] as JSONObject).getBoolean("roundsEnd") && !(args[0] as JSONObject).getBoolean("isAd")) ShowNewRoundDialog(R.layout.new_round_dialog, args[0] as JSONObject)
-                    if((args[0] as JSONObject).getBoolean("roundsEnd") && !(args[0] as JSONObject).getBoolean("isAd")) ShowRestartGameDialog(R.layout.restart_game_dialog, args[0] as JSONObject)
+                    if(!(args[0] as JSONObject).getBoolean("roundsEnd")) ShowNewRoundDialog(R.layout.new_round_dialog, args[0] as JSONObject)
+                    if((args[0] as JSONObject).getBoolean("roundsEnd")) ShowRestartGameDialog(R.layout.restart_game_dialog, args[0] as JSONObject)
                 }
             })
 
@@ -250,12 +254,14 @@ class Session : AppCompatActivity() {
 
         alertDialog.winner_name_text.text = args.getString("winnerName")
         alertDialog.vote_for_restart_button.setOnClickListener {
+            buttonClickSoundMP.start()
             SESSION_OBJECT.socket.emit("ready_for_restart", JSONObject().put("sessionID", SESSION_OBJECT.sessionID).put("password", SESSION_OBJECT.password))
             this.main_layout.session_game_panel.dialog_viewer.removeAllViews()
             alertDialog.dismiss()
             playerSelected = false
         }
         alertDialog.leave_button.setOnClickListener {
+            buttonClickSoundMP.start()
             mSocket.disconnect()
             val intent = Intent(this, Main_menu::class.java)
             startActivity(intent)
@@ -281,6 +287,7 @@ class Session : AppCompatActivity() {
         alertDialog.round_status_text.text = if((args.get("winTab") as JSONObject).getBoolean(SESSION_OBJECT.socket.id())) resources.getString(R.string.you_won) else resources.getString(R.string.you_lose)
         alertDialog.correct_answer_text.text = args.getString("correctAnswer")
         alertDialog.vote_for_round_button.setOnClickListener {
+            buttonClickSoundMP.start()
             SESSION_OBJECT.socket.emit("ready_for_round", JSONObject().put("sessionID", SESSION_OBJECT.sessionID).put("password", SESSION_OBJECT.password))
             this.main_layout.session_game_panel.dialog_viewer.removeAllViews()
             alertDialog.dismiss()
@@ -321,6 +328,7 @@ class Session : AppCompatActivity() {
             (playerBlock as Button).setOnClickListener {
                 if(playerSelected) return@setOnClickListener
                 playerSelected = true
+                buttonClickSoundMP.start()
                 alertDialog.setOnDismissListener { return@setOnDismissListener }
                 alertDialog.dismiss()
                 SESSION_OBJECT.socket.emit(
@@ -358,6 +366,7 @@ class Session : AppCompatActivity() {
         alertDialog.setOnDismissListener {backPressedDialogShowed = false}
         alertDialog.show()
         alertDialog.yes_btn.setOnClickListener {
+            buttonClickSoundMP.start()
             mSocket.disconnect()
             val intent = Intent(this, Main_menu::class.java)
             startActivity(intent)
@@ -365,6 +374,7 @@ class Session : AppCompatActivity() {
             finish()
         }
         alertDialog.no_btn.setOnClickListener {
+            buttonClickSoundMP.start()
             alertDialog.dismiss()
         }
     }

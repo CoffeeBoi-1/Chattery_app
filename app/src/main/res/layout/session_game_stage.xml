@@ -14,7 +14,7 @@
         android:breakStrategy="simple"
         android:fontFamily="@font/comfortaa_bold"
         android:gravity="center"
-        android:textColor="@color/textBlack"
+        android:textColor="#FFFFFF"
         app:layout_constraintTop_toTopOf="parent">
     </TextView>
     <ScrollView
@@ -38,11 +38,11 @@
         android:layout_height="50dp"
         android:layout_margin="15dp"
         android:background="@drawable/rounded_btn_style"
-        android:backgroundTint="@color/textBlack"
+        android:backgroundTint="#FFFFFF"
         android:fontFamily="@font/comfortaa_bold"
         android:padding="10dp"
         android:text="@string/make_choice"
-        android:textColor="#FFFF"
+        android:textColor="@color/textBlack"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent">
     </Button>
