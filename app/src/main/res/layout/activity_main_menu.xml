@@ -6,102 +6,107 @@
     android:layout_height="match_parent"
     tools:context=".Main_menu"
     android:orientation="vertical"
-    android:background="@color/textBlack">
-
-
+    android:background="@color/textBlack"
+    android:padding="15dp">
+    <LinearLayout
+        android:id="@+id/chattery"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:background="@drawable/rounded_btn_style"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="15dp"
+        android:layout_margin="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:fontFamily="@font/comfortaa_bold"
+            android:gravity="center"
+            android:text="Chattery"
+            android:textColor="@color/textBlack"
+            android:autoSizeTextType="uniform"
+            android:breakStrategy="simple"
+            android:textSize="79sp"
+            app:layout_constraintTop_toTopOf="parent">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/comfortaa_bold"
+            android:gravity="center"
+            android:text="@string/guess_dialog"
+            android:textColor="@color/textBlack"
+            android:autoSizeTextType="uniform"
+            android:breakStrategy="simple"
+            android:textSize="30sp"
+            app:layout_constraintTop_toTopOf="parent">
+        </TextView>
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="top"
+        android:layout_marginTop="50dp"
         android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingVertical="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/settings_btn"
+        app:layout_constraintTop_toBottomOf="@id/chattery"
         tools:layout_editor_absoluteX="15dp">
-
-        <LinearLayout
-            android:id="@+id/chattery"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:background="@drawable/rounded_layout"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="10dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:fontFamily="@font/comfortaa_bold"
-                android:gravity="center"
-                android:text="Chattery"
-                android:textColor="@color/textBlack"
-                android:autoSizeTextType="uniform"
-                android:breakStrategy="simple"
-                android:textSize="79sp"
-                app:layout_constraintTop_toTopOf="parent">
-            </TextView>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:fontFamily="@font/comfortaa_bold"
-                android:gravity="center"
-                android:text="@string/guess_dialog"
-                android:textColor="@color/textBlack"
-                android:autoSizeTextType="uniform"
-                android:breakStrategy="simple"
-                android:textSize="30sp"
-                app:layout_constraintTop_toTopOf="parent">
-            </TextView>
-        </LinearLayout>
 
         <EditText
             android:id="@+id/enter_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/rounded_btn_style"
             android:digits="qwertzuiopasdfghjklyxcvbnmйцукенгшщзхъфывапролджэячсмитьбюёQWERTZUIOPASDFGHJKLYXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
             android:fontFamily="@font/comfortaa_bold"
             android:hint="@string/enter_your_name"
             android:maxLength="10"
             android:padding="10dp"
-            app:layout_constraintBottom_toTopOf="@id/host_game_btn"
-            app:layout_constraintTop_toBottomOf="@id/chattery">
+            app:layout_constraintTop_toTopOf="parent">
         </EditText>
 
-        <Button
-            android:id="@+id/host_game_btn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_btn_style"
-            android:fontFamily="@font/comfortaa_bold"
-            android:text="@string/host_game"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@id/enter_name_edittext"
-            app:layout_constraintBottom_toTopOf="@id/join_game_btn">
-        </Button>
+            app:layout_constraintBottom_toBottomOf="parent">
+            <Button
+                android:id="@+id/host_game_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/rounded_btn_style"
+                android:fontFamily="@font/comfortaa_bold"
+                android:text="@string/host_game"
+                app:layout_constraintBottom_toTopOf="@id/join_game_btn">
+            </Button>
 
-        <Button
-            android:id="@+id/join_game_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/rounded_btn_style"
-            android:fontFamily="@font/comfortaa_bold"
-            android:text="@string/join_game"
-            app:layout_constraintBottom_toTopOf="@id/settings_btn"
-            app:layout_constraintTop_toBottomOf="@id/host_game_btn">
-        </Button>
-
-        <Button
-            android:id="@+id/settings_btn"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:background="@drawable/ic_settings"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/join_game_btn">
-        </Button>
+            <Button
+                android:id="@+id/join_game_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_btn_style"
+                android:fontFamily="@font/comfortaa_bold"
+                android:text="@string/join_game">
+            </Button>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/settings_btn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/ic_settings"
+        app:layout_constraintBottom_toBottomOf="parent">
+    </Button>
 </androidx.constraintlayout.widget.ConstraintLayout>

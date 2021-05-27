@@ -3,17 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="6dp">
-    <TextView
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
+    android:maxWidth="280dp"
+    android:layout_marginTop="5dp">
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="@color/textBlack"
-        android:background="@drawable/rounded_btn_style"
-        android:fontFamily="@font/comfortaa_bold"
-        android:padding="10dp"
-        android:textSize="20sp"
-        android:maxWidth="280dp">
-    </TextView>
+        android:id="@+id/textLinear"
+        android:background="@drawable/rounded_btn_style">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text"
+            android:backgroundTint="#FFFFFF"
+            android:layout_margin="5dp"
+            android:textColor="@color/textBlack"
+            android:fontFamily="@font/comfortaa_bold"
+            android:maxWidth="280dp"
+            android:textSize="20sp">
+        </TextView>
+    </LinearLayout>
 </RelativeLayout>

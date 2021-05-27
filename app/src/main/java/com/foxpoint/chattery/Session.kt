@@ -15,6 +15,8 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginStart
+import androidx.core.view.setPadding
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.google.gson.Gson
 import io.socket.client.Socket
@@ -168,16 +170,28 @@ class Session : AppCompatActivity() {
                     var dialog: JSONArray = (args[0] as JSONObject).get("dialog") as JSONArray
                     SESSION_OBJECT.nicknames = (args[0] as JSONObject).get("nicknames") as JSONArray
                     choiceDialogShowed = false
-
+                    var prevMessage = ""
                     for (i in 0 until dialog.length()) {
                         val message = (dialog[i] as JSONObject)
                         val messageBlock = layoutInflater.inflate(R.layout.dialog_message, this.main_layout.session_game_panel.dialog_viewer, false)
                         messageBlock.text.text = message.getString("text")
-                        val params = messageBlock.text.layoutParams as RelativeLayout.LayoutParams
+                        var scale = resources.displayMetrics.density;
+                        val params = messageBlock.textLinear.layoutParams as RelativeLayout.LayoutParams
+                        var params_ = (messageBlock.layoutParams as LinearLayout.LayoutParams)
 
-                        if (message.getString("from") == "me") { messageBlock.animation = AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide); params.addRule(RelativeLayout.ALIGN_PARENT_END) } else messageBlock.animation = AnimationUtils.loadAnimation(this, R.anim.anim_fade_right_slide)
+                        if (message.getString("from") == "me") { messageBlock.animation = AnimationUtils.loadAnimation(this, R.anim.anim_fade_left_slide); params.addRule(RelativeLayout.ALIGN_PARENT_END) }
+                        else { messageBlock.animation = AnimationUtils.loadAnimation(this, R.anim.anim_fade_right_slide); messageBlock.textLinear.backgroundTintList = resources.getColorStateList(R.color.background_gray) }
+                        if(prevMessage != message.getString("from"))
+                        {
+                            params_.setMargins((10 * scale+0.5).toInt(), (20 * scale+0.5).toInt(), (10 * scale+0.5).toInt(), 0)
+                            messageBlock.layoutParams = params_
 
-                        messageBlock.text.layoutParams = params
+                            if(message.getString("from") == "me") messageBlock.textLinear.background = getDrawable(R.drawable.message_right)
+                            else messageBlock.textLinear.background = getDrawable(R.drawable.message_left)
+                        }
+                        prevMessage = message.getString("from")
+
+                        messageBlock.textLinear.layoutParams = params
                         this.main_layout.session_game_panel.dialog_viewer.addView(messageBlock)
                     }
 
