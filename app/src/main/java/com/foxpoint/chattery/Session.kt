@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.marginStart
 import androidx.core.view.setPadding
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.gson.Gson
 import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_main_menu.*
@@ -63,6 +65,7 @@ class Session : AppCompatActivity() {
         buttonClickSoundMP = MediaPlayer.create(this, R.raw.button_click_sound)
         //---------------------------------------------------------
         if (savedInstanceState != null) return
+        MobileAds.initialize(this) {}
 
         mSocket = ServerUtils().execute(JSONObject().put("function", "GetSessionSocket")).get().get("res") as Socket
         var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
@@ -307,6 +310,8 @@ class Session : AppCompatActivity() {
             alertDialog.dismiss()
             playerSelected = false
         }
+
+        alertDialog.ad_view_session.loadAd(AdRequest.Builder().build())
     }
 
     private fun ShowChooseDialog(layout: Int)

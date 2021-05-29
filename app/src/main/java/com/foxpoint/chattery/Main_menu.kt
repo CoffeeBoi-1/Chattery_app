@@ -19,6 +19,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import kotlinx.android.synthetic.main.activity_main_menu.join_game_btn
@@ -61,6 +63,9 @@ class Main_menu : AppCompatActivity() {
         cancelSoundMP = MediaPlayer.create(this, R.raw.cancel_sound)
         buttonClickSoundMP = MediaPlayer.create(this, R.raw.button_click_sound)
         //---------------------------------------------------------
+        MobileAds.initialize(this) {}
+        ad_view_main.loadAd(AdRequest.Builder().build())
+
         settings_btn.setOnClickListener {
             buttonClickSoundMP.start()
             val intent = Intent(this, Settings::class.java)

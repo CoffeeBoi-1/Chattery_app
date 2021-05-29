@@ -7,6 +7,15 @@
     android:gravity="center_horizontal"
     android:padding="5dp"
     android:background="@drawable/rounded_layout">
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ad_view_session"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_margin="15dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1652241413207320/5117865977">
+    </com.google.android.gms.ads.AdView>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="100dp"
