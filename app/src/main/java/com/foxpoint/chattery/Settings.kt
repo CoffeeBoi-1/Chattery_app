@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.leave_game_dialog.*
 import kotlinx.android.synthetic.main.reg_telegram_dialog.*
 import kotlinx.android.synthetic.main.telegram_login_button.*
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +28,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
     private var dialogShowed = false;
+    private var disableDialogShowed = false
     lateinit var buttonClickSoundMP : MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,15 +63,7 @@ class Settings : AppCompatActivity(), CoroutineScope {
             (recycler as RecyclerView).layoutManager = LinearLayoutManager(this)
             disable_acc_btn.setOnClickListener {
                 buttonClickSoundMP.start()
-                var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
-                val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
-                gameSettings.TELEGRAM_ACCESS_TOKEN = byteArrayOf()
-                gameSettings.TELEGRAM_BLACKLIST = HashMap<Int, String>()
-                gameSettings.TELEGRAM_CLIENT_ID = 0
-                gameSettings.TELEGRAM_DATA_CENTER = ""
-                pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
-                startActivity(intent)
-                finish()
+                ShowDisableAccDialog(R.layout.leave_game_dialog)
             }
         }
         else
@@ -147,6 +141,37 @@ class Settings : AppCompatActivity(), CoroutineScope {
                     DrawRecycler()
                 }
             }
+        }
+    }
+
+    private fun ShowDisableAccDialog(layout: Int)
+    {
+        if (disableDialogShowed) return
+        disableDialogShowed= true
+        var dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setView(layout)
+        var alertDialog = dialogBuilder.create()
+        alertDialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.setOnDismissListener {disableDialogShowed = false}
+        alertDialog.show()
+
+        alertDialog.text.text = resources.getText(R.string.you_sure)
+        alertDialog.yes_btn.setOnClickListener {
+            buttonClickSoundMP.start()
+            var pref = getSharedPreferences("DATA", Context.MODE_PRIVATE)
+            val gameSettings : GameSettings = Gson().fromJson(pref.getString("GAME_SETTINGS", null), GameSettings::class.java)
+            gameSettings.TELEGRAM_ACCESS_TOKEN = byteArrayOf()
+            gameSettings.TELEGRAM_BLACKLIST = HashMap<Int, String>()
+            gameSettings.TELEGRAM_CLIENT_ID = 0
+            gameSettings.TELEGRAM_DATA_CENTER = ""
+            pref.edit().putString("GAME_SETTINGS", Gson().toJson(gameSettings)).apply()
+            startActivity(intent)
+            finish()
+        }
+        alertDialog.no_btn.setOnClickListener {
+            buttonClickSoundMP.start()
+            alertDialog.dismiss()
         }
     }
 

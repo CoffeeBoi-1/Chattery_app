@@ -8,6 +8,7 @@
     android:padding="15dp"
     android:background="@drawable/rounded_layout">
     <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:fontFamily="@font/comfortaa_bold"

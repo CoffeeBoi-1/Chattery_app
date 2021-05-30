@@ -44,7 +44,8 @@
     <string name="blacklist_dialog">Какие диалоги показывать в игре?</string>
     <string name="not_enough_dialogs_tg">Не хватает диалогов в Telegram</string>
     <string name="login_telegram">Войти через Телеграм</string>
-    <string name="disable_acc">Отключить аккаунт?</string>
+    <string name="disable_acc">Отключить аккаунт</string>
     <string name="personal_data">Все личные данные хранятся только на вашем телефоне</string>
     <string name="guess_dialog">Угадай, чей диалог?</string>
+    <string name="you_sure">Ты уверен?</string>
 </resources>
